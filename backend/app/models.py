@@ -13,6 +13,10 @@ class User(db.Model):
 
     facebook_token = db.Column(db.String(512), unique=True, index=True)
 
+    facebook_id = db.Column(db.String(200), unique=True)
+
+    device_id = db.Column(db.String(20))
+
 
 class Interaction(db.Model):
     __tablename__ = "interactions"
