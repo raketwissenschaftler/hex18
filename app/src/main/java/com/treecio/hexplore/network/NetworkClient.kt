@@ -18,7 +18,6 @@ import timber.log.Timber
 import java.io.IOException
 
 
-
 class NetworkClient(val context: Context) {
 
     companion object {
@@ -75,7 +74,7 @@ class NetworkClient(val context: Context) {
 
     @Throws(IOException::class)
     protected fun <T, R> post(url: String, data: T,
-                    responseClazz: Class<R>, handler: (R) -> Unit) {
+                              responseClazz: Class<R>, handler: (R) -> Unit) {
         val json = gson.toJson(data)
         Timber.d("POST: $url")
         val body = RequestBody.create(JSON, json)
@@ -95,10 +94,10 @@ class NetworkClient(val context: Context) {
         })
     }
 
-    fun register(facebookToken: AccessToken) {
+    fun register(facebookToken: AccessToken, callback: () -> Unit) {
         val obj = AddUserRequest(Hardware.getDeviceIdString(context),
                 facebookToken.userId, facebookToken.token)
-        post(ENDPOINT_ADDUSER, obj)
+        post(ENDPOINT_ADDUSER, obj, Unit::class.java, { callback() })
     }
 
     fun queryUser(deviceId: String) {

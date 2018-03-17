@@ -9,36 +9,40 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.treecio.hexplore.activities.PeopleActivity
 import com.treecio.hexplore.network.NetworkClient
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private lateinit var callbackManager: CallbackManager
     private lateinit var networkClient: NetworkClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
 
         networkClient = NetworkClient(this)
         callbackManager = CallbackManager.Factory.create()
 
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
-                networkClient.register(loginResult.accessToken)
+                networkClient.register(loginResult.accessToken) {
+                    finish()
+                    startActivity(Intent(this@LoginActivity, PeopleActivity::class.java))
+                }
             }
 
             override fun onCancel() {
             }
 
             override fun onError(exception: FacebookException) {
-                Toast.makeText(this@MainActivity, "There was a problem", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, "There was a problem", Toast.LENGTH_SHORT).show()
             }
         })
 
-        btn_login.setOnClickListener { LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("public_profile", "user_friends")) }
+        btn_login.setOnClickListener { LoginManager.getInstance().logInWithReadPermissions(this@LoginActivity, Arrays.asList("public_profile", "user_friends")) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
