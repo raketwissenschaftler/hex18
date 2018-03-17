@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.os.ParcelUuid
 import com.treecio.hexplore.R
 import com.treecio.hexplore.utils.toBytes
-import com.treecio.hexplore.utils.toUUID
 import timber.log.Timber
 import java.util.*
 
@@ -63,7 +62,7 @@ class BLEService : Service() {
 
     private fun startBroadcasting() {
         val settings = AdvertiseSettings.Builder()
-                .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY) // TODO
+                .setAdvertiseMode(BleConfig.ADVERTISE_MODE)
                 .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
                 .setConnectable(false)
                 .build()
@@ -71,9 +70,10 @@ class BLEService : Service() {
         val pUuid = ParcelUuid(getServiceUuid())
 
         val data = AdvertiseData.Builder()
-                .setIncludeDeviceName(true) // TODO change to false
+                .setIncludeDeviceName(false)
+                .setIncludeTxPowerLevel(false)
                 .addServiceUuid(pUuid)
-                .addServiceData(pUuid, getDeviceUUID().toBytes())
+                .addServiceData(pUuid, getDeviceIDBytes())
                 .build()
 
         bluetoothLeAdvertiser.startAdvertising(settings, data, advertisingCallback)
@@ -85,24 +85,18 @@ class BLEService : Service() {
 
     val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            if (result != null) {
-                onSingleResult(result)
-            }
+            result?.let { onSingleResult(it) }
         }
 
         override fun onBatchScanResults(results: List<ScanResult>) {
-            super.onBatchScanResults(results)
+            results.forEach(::onSingleResult)
         }
 
         fun onSingleResult(result: ScanResult) {
-            if (result.device == null
-            /*|| TextUtils.isEmpty(result.device.name)*/)
-                return
-
-            val serviceUuid = result.scanRecord.serviceUuids.get(0)
-            val scannedUuid = result.scanRecord.getServiceData(serviceUuid).toUUID()
-
-            Timber.i("Scanned $serviceUuid: $scannedUuid")
+            result.device ?: return
+            result.scanRecord.serviceData.values.forEach { remoteDeviceId ->
+                Timber.i("Scanned ${remoteDeviceId.asList()}")
+            }
         }
 
         override fun onScanFailed(errorCode: Int) {
@@ -116,10 +110,7 @@ class BLEService : Service() {
                         .setServiceUuid(ParcelUuid(getServiceUuid()))
                         .build()
         )
-
-        val settings = ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY) // TODO
-                .build()
+        val settings = ScanSettings.Builder().setScanMode(BleConfig.SCAN_MODE).build()
 
         bluetoothLeScanner.startScan(filters, settings, scanCallback)
     }
@@ -129,6 +120,7 @@ class BLEService : Service() {
     }
 
     private fun getServiceUuid() = UUID.fromString(getString(R.string.ble_service_uuid))
-    private fun getDeviceUUID() = UUID.randomUUID()
+    private fun getDeviceIDBytes() = UUID.randomUUID()
+            .toBytes().take(BleConfig.MAX_BYTES).toByteArray()
 
 }

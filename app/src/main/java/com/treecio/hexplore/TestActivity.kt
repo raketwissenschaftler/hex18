@@ -21,7 +21,7 @@ class TestActivity : AppCompatActivity() {
             intent.putExtra(BLEService.EXTRA_MODE, BLEService.MODE_BROADCAST)
             startService(intent)
         }
-        btnBroadcast.setOnClickListener {
+        btnDiscovery.setOnClickListener {
             val intent = Intent(this, BLEService::class.java)
             intent.putExtra(BLEService.EXTRA_MODE, BLEService.MODE_DISCOVERY)
             startService(intent)
