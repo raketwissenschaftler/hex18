@@ -17,6 +17,8 @@ class User(db.Model):
 
     device_id = db.Column(db.String(20))
 
+    description = db.Column(db.String(1000))
+
 
 class Interaction(db.Model):
     __tablename__ = "interactions"
