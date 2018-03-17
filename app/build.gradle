@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.treecio.hexplore.hexplore"
+        applicationId "com.treecio.hexplore"
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 1
