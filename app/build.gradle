@@ -41,9 +41,19 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+
     implementation 'com.jakewharton.timber:timber:4.6.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.facebook.android:facebook-login:[4,5)'
+
+    // DBFlow
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:4.1.1"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:4.1.1"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:4.1.1"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:4.1.1"
+
+    compile "org.jetbrains.kotlin:kotlin-reflect:1.2.30"
 }
 

@@ -63,7 +63,7 @@ class BLEService : Service() {
     private fun startBroadcasting() {
         val settings = AdvertiseSettings.Builder()
                 .setAdvertiseMode(BleConfig.ADVERTISE_MODE)
-                .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+                .setTxPowerLevel(BleConfig.ADVERTISE_POWER)
                 .setConnectable(false)
                 .build()
 

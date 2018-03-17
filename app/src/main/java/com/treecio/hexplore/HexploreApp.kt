@@ -2,6 +2,7 @@ package com.treecio.hexplore
 
 import android.app.Application
 import android.support.v7.app.AppCompatDelegate
+import com.treecio.hexplore.db.DBFlowInit
 import timber.log.Timber
 
 class HexploreApp : Application() {
@@ -13,6 +14,10 @@ class HexploreApp : Application() {
         Timber.plant(Timber.DebugTree())
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+
+        // DBFlow
+        DBFlowInit.init(this)
+
     }
 
 }

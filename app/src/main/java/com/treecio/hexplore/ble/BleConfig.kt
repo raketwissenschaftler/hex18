@@ -5,6 +5,7 @@ import android.bluetooth.le.ScanSettings
 
 object BleConfig {
 
+    const val ADVERTISE_POWER = AdvertiseSettings.ADVERTISE_TX_POWER_HIGH
     const val ADVERTISE_MODE = AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY
     const val SCAN_MODE = ScanSettings.SCAN_MODE_LOW_LATENCY
 
