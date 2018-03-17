@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\s156386\Dropbox\hex18\Hexplore.iml" filepath="C:\Users\s156386\Dropbox\hex18\Hexplore.iml" />
+      <module fileurl="file://C:\Users\Pali\StudioProjects\hex18\Hexplore.iml" filepath="C:\Users\Pali\StudioProjects\hex18\Hexplore.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/hex18.iml" filepath="$PROJECT_DIR$/hex18.iml" />
     </modules>

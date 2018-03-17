@@ -1,5 +1,6 @@
 package com.treecio.hexplore.model
 
+import android.database.Cursor
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
@@ -14,6 +15,14 @@ class User (
         @PrimaryKey var shortId: Blob? = null,
 
         @Column var handshakeCount: Int = 0,
-        @Column var lastHandshake: Date? = null
+        @Column var lastHandshake: Date? = null,
+        @Column var name: String? = null,
+        @Column var description: String? = null
 
-) : BaseModel()
+) : BaseModel() {
+
+    fun fromCursor(cursor: Cursor) {
+
+    }
+
+}
