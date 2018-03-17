@@ -57,13 +57,17 @@ def add_user():
 @app.route(API_PREFIX + "profiles", methods=["POST"])
 def get_profile_info():
     if request.json is None:
-        return_error(400, "Request has no payload")
+        return return_error(400, "Request has no payload")
+
+    if request.json.get("ids") is None:
+        return return_error(400, "Id's not included in request payload")
 
     users = []
     for device_id in request.json.get("ids"):
         user = User.query.filter(User.device_id == device_id).one()
         facebook_api_url = "https://graph.facebook.com/v2.12/me?fields=id%2Cname%2Cposts%2Cbirthday%2Ceducation%2Cinspirational_people&access_token="
         facebook_api_url += user.facebook_token
+        print(facebook_api_url)
         user_data = json.loads(urllib.request.urlopen(facebook_api_url).read().decode())
         user_data["facebook_id"] = user_data["id"]
         user_data["id"] = device_id
