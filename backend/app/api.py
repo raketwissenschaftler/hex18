@@ -72,8 +72,10 @@ def get_profile_info():
         user_data["facebook_id"] = user_data["id"]
         user_data["id"] = device_id
         user_data["facebook_url"] = "https://facebook.com/" + user_data["facebook_id"]
+        user_data["image_url"] = "https://graph.facebook.com/" + user_data["facebook_id"] + "/picture?type=large"
         user_data["user_id"] = user.id
         user_data["description"] = user.description
+        user_data["occupation"] = user.occupation
         users.append(user_data)
 
     return jsonify({"profiles": users})
@@ -97,3 +99,20 @@ def add_description_for_user():
 
     return jsonify({"message": "Description updated successfully"})
 
+@app.route(API_PREFIX + "addOccupationForUser", methods=["POST"])
+def add_occupation_for_user():
+    if request.json.get("user_id") is None:
+        return return_error(400, "No user id present")
+
+    if request.json.get("occupation") is None:
+        return return_error(400, "No occupation present")
+
+    user = User.query.get(request.json.get("user_id"))
+
+    user.occupation = request.json.get("occupation")
+
+    db.session.add(user)
+
+    db.session.commit()
+
+    return jsonify({"message": "Occupation updated successfully"})

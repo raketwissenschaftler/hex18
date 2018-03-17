@@ -19,6 +19,8 @@ class User(db.Model):
 
     description = db.Column(db.String(1000))
 
+    occupation = db.Column(db.String(100))
+
 
 class Interaction(db.Model):
     __tablename__ = "interactions"
