@@ -19,10 +19,14 @@ class BleService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Timber.d("Starting service")
 
-        when (intent?.getStringExtra(EXTRA_MODE)) {
-            /*MODE_BROADCAST -> startBroadcasting()
-            MODE_DISCOVERY -> startDiscovery()*/
+        val state = when (intent?.getStringExtra(EXTRA_MODE)) {
+            MODE_BROADCAST -> BleBroadcasting(this)
+            MODE_DISCOVERY -> BleDiscovery(this)
+            else -> return START_STICKY
         }
+
+        state.prepare()
+        state.transitionIn()
 
         return START_STICKY
     }
