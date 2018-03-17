@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Hexplore</string>
+    <string name="facebook_app_id">187284645391384</string>
+    <string name="fb_login_protocol_scheme">fb187284645391384</string>
 </resources>
