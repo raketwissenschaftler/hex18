@@ -60,15 +60,16 @@ def get_profile_info():
         return_error(400, "Request has no payload")
 
     users = []
-    for user_id in request.json.get("ids"):
-        user = User.query.filter(User.id == user_id).one()
+    for device_id in request.json.get("ids"):
+        user = User.query.filter(User.device_id == device_id).one()
         facebook_api_url = "https://graph.facebook.com/v2.12/me?fields=id%2Cname%2Cposts%2Cbirthday%2Ceducation%2Cinspirational_people&access_token="
         facebook_api_url += user.facebook_token
         user_data = json.loads(urllib.request.urlopen(facebook_api_url).read().decode())
         user_data["facebook_id"] = user_data["id"]
-        user_data["id"] = user_id
+        user_data["id"] = device_id
         user_data["facebook_url"] = "https://facebook.com/" + user_data["facebook_id"]
+        user_data["user_id"] = user.id
         users.append(user_data)
 
-    return jsonify(users)
+    return jsonify({"profiles": users})
 
