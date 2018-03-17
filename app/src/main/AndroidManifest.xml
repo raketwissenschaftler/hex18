@@ -27,7 +27,7 @@
         <activity android:name=".TestActivity" android:exported="true"/>
 
         <!-- Services -->
-        <service android:name=".ble.BLEService"/>
+        <service android:name=".ble.BleService"/>
     </application>
 
 </manifest>

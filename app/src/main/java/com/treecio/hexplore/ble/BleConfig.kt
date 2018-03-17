@@ -2,6 +2,7 @@ package com.treecio.hexplore.ble
 
 import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.ScanSettings
+import java.util.*
 
 object BleConfig {
 
@@ -10,5 +11,7 @@ object BleConfig {
     const val SCAN_MODE = ScanSettings.SCAN_MODE_LOW_LATENCY
 
     const val MAX_BYTES = 9
+
+    val thresholdDateLambda: Calendar.() -> Unit = { add(Calendar.SECOND, -10) }
 
 }

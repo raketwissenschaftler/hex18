@@ -3,7 +3,7 @@ package com.treecio.hexplore
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.treecio.hexplore.ble.BLEService
+import com.treecio.hexplore.ble.BleService
 import kotlinx.android.synthetic.main.activity_test.*
 
 class TestActivity : AppCompatActivity() {
@@ -17,13 +17,13 @@ class TestActivity : AppCompatActivity() {
         super.onStart()
 
         btnBroadcast.setOnClickListener {
-            val intent = Intent(this, BLEService::class.java)
-            intent.putExtra(BLEService.EXTRA_MODE, BLEService.MODE_BROADCAST)
+            val intent = Intent(this, BleService::class.java)
+            intent.putExtra(BleService.EXTRA_MODE, BleService.MODE_BROADCAST)
             startService(intent)
         }
         btnDiscovery.setOnClickListener {
-            val intent = Intent(this, BLEService::class.java)
-            intent.putExtra(BLEService.EXTRA_MODE, BLEService.MODE_DISCOVERY)
+            val intent = Intent(this, BleService::class.java)
+            intent.putExtra(BleService.EXTRA_MODE, BleService.MODE_DISCOVERY)
             startService(intent)
         }
     }

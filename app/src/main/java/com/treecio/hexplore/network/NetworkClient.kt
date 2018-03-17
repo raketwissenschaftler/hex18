@@ -11,9 +11,9 @@ class NetworkClient {
 
         val JSON = MediaType.parse("application/json; charset=utf-8")
 
-        val BASE_ENDPOINT = "https://hex18.herokuapp.com/api/v1"
-        val ENDPOINT_PROFILES = BASE_ENDPOINT + "/profiles"
-        val ENDPOINT_ADDUSER = BASE_ENDPOINT + "/addUser"
+        val BASE = "https://hex18.herokuapp.com/api/v1"
+        val ENDPOINT_PROFILES = "$BASE/profiles"
+        val ENDPOINT_ADDUSER = "$BASE/addUser"
 
     }
 
