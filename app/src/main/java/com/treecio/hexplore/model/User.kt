@@ -16,8 +16,7 @@ class User (
 
         @Column var handshakeCount: Int = 0,
         @Column var lastHandshake: Date? = null,
-        @Column var name: String? = null,
-        @Column var description: String? = null
+        @Column var name: String? = null
 
 ) : BaseModel() {
 
