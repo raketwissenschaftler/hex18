@@ -14,7 +14,7 @@ class UserAdapter(private val userList:FlowQueryList<User>): RecyclerView.Adapte
 
         holder?.txtName?.text = userList[position]?.name ?: "Unknown"
         holder?.txtShakeCount?.text = userList[position]?.handshakeCount.toString()
-        holder?.txtDescription?.text = userList[position]?.description ?: ""
+        holder?.txtDescription?.text = "No description yet"
 
     }
 

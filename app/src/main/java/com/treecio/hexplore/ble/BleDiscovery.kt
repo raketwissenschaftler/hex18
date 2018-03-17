@@ -3,19 +3,20 @@ package com.treecio.hexplore.ble
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
 import android.content.Context
+import android.os.AsyncTask
 import android.os.ParcelUuid
 import com.raizlabs.android.dbflow.data.Blob
 import com.treecio.hexplore.model.User
+import com.treecio.hexplore.network.NetworkClient
 import com.treecio.hexplore.utils.toHexString
 import timber.log.Timber
 import java.util.*
 
 
-
-
 class BleDiscovery(context: Context) : BleAbstractState(context) {
 
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
+    private lateinit var networkClient: NetworkClient
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
@@ -50,6 +51,11 @@ class BleDiscovery(context: Context) : BleAbstractState(context) {
         bluetoothLeScanner.startScan(filters, settings, scanCallback)
     }
 
+    override fun prepare() {
+        bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().bluetoothLeScanner
+        networkClient = NetworkClient(context)
+    }
+
     private fun handleId(shortId: Blob) {
         val now = Date()
         val cal = Calendar.getInstance()
@@ -66,14 +72,17 @@ class BleDiscovery(context: Context) : BleAbstractState(context) {
         }
         user.lastHandshake = now
         user.save()
+
+        // if the user has not been queried yet
+        if (user.handshakeCount == 1) {
+            AsyncTask.execute {
+                networkClient.queryUser(shortId.blob.toHexString())
+            }
+        }
     }
 
     private fun stopDiscovery() {
         bluetoothLeScanner.stopScan(scanCallback);
-    }
-
-    override fun prepare() {
-        bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().bluetoothLeScanner
     }
 
 
