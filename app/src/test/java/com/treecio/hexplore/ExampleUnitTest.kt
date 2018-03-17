@@ -1,4 +1,4 @@
-package com.treecio.hexplore.hexplore
+package com.treecio.hexplore
 
 import org.junit.Test
 

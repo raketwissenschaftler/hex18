@@ -1,4 +1,4 @@
-package com.treecio.hexplore.hexplore
+package com.treecio.hexplore
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.treecio.hexplore.hexplore", appContext.packageName)
+        assertEquals("com.treecio.hexplore", appContext.packageName)
     }
 }

@@ -1,7 +1,7 @@
-package com.treecio.hexplore.hexplore
+package com.treecio.hexplore
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
