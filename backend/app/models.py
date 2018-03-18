@@ -30,11 +30,3 @@ class Interaction(db.Model):
     coordinates = db.Column(db.String(100), index=True)
 
     timestamp = db.Column(db.DateTime)
-
-    # user_id = db.Column(db.String(36), db.ForeignKey('User.id'), nullable=False)
-    #
-    # peer_id = db.Column(db.String(36), db.ForeignKey('User.id'), nullable=False)
-    #
-    # user = db.relationship("User", foreign_keys=[user_id])
-    #
-    # peer = db.relationship("User", foreign_keys=[peer_id])
