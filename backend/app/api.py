@@ -28,7 +28,7 @@ def add_user():
     if request.json.get("device_id") is None:
         return return_error(400, "No device id provided")
 
-    facebook_api_url = "https://graph.facebook.com/v2.12/me?fields=id&access_token="
+    facebook_api_url = "https://graph.facebook.com/v2.12/me?fields=id,name,work&access_token="
     facebook_api_url += request.json.get("facebook_token")
     try:
         user_data = json.loads(urllib.request.urlopen(facebook_api_url).read().decode())
@@ -38,20 +38,41 @@ def add_user():
     user_with_current_id = User.query.filter(User.facebook_id == user_data["id"]).one_or_none()
 
     if user_with_current_id is None:
+        try:
+            occupation = user_data["work"][0]["position"]["name"] + " at " + user_data["work"][0]["employer"]["name"]
+        except Exception:
+            occupation = ""
+
         user = User(
             facebook_token=request.json.get("facebook_token"),
             facebook_id=user_data["id"],
-            device_id=request.json.get("device_id")
+            device_id=request.json.get("device_id"),
+            occupation=occupation
         )
     else:
         user = user_with_current_id
         user.facebook_id = user_data["id"]
         user.device_id = request.json.get("device_id")
+        if user.occupation is None:
+            try:
+                user.occupation = user_data["work"][0]["position"]["name"] + " at " + user_data["work"][0]["employer"][
+                    "name"]
+            except Exception:
+                user.occupation = ""
+        occupation = user.occupation
 
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({"user_id": user.id})
+    return jsonify(
+        {
+            "user_id": user.id,
+            "name": user_data["name"],
+            "image_url": "https://graph.facebook.com/" + user_data["id"] + "/picture?type=large",
+            "occupation": occupation,
+            "description": ""
+         }
+    )
 
 
 @app.route(API_PREFIX + "profiles", methods=["POST"])
@@ -92,37 +113,22 @@ def add_description_for_user():
     if request.json.get("user_id") is None:
         return return_error(400, "No user id present")
 
+    if request.json.get("occupation") is None:
+        return return_error(400, "No occupation present")
+
     if request.json.get("description") is None:
         return return_error(400, "No description present")
 
     user = User.query.get(request.json.get("user_id"))
 
     user.description = request.json.get("description")
-
-    db.session.add(user)
-
-    db.session.commit()
-
-    return jsonify({"message": "Description updated successfully"})
-
-
-@app.route(API_PREFIX + "addOccupationForUser", methods=["POST"])
-def add_occupation_for_user():
-    if request.json.get("user_id") is None:
-        return return_error(400, "No user id present")
-
-    if request.json.get("occupation") is None:
-        return return_error(400, "No occupation present")
-
-    user = User.query.get(request.json.get("user_id"))
-
     user.occupation = request.json.get("occupation")
 
     db.session.add(user)
 
     db.session.commit()
 
-    return jsonify({"message": "Occupation updated successfully"})
+    return jsonify({"message": "Description and occupation updated successfully"})
 
 
 @app.route(API_PREFIX + "addInteractions", methods=["POST"])
