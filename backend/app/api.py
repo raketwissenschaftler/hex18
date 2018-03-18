@@ -62,34 +62,34 @@ def get_profile_info():
     if request.json.get("ids") is None:
         return return_error(400, "Id's not included in request payload")
 
-    # if request.json.get("user_id") is None:
-    #     return return_error(400, "No user id provided")
+    if request.json.get("user_id") is None:
+        return return_error(400, "No user id provided")
 
     print(request.json)
-    registered_friends = []
 
-    # user = User.query.get(request.json.get("user_id"))
-    # facebook_api_url = "https://graph.facebook.com/v2.12/me/friends&access_token="
-    # facebook_api_url += user.facebook_token
-    # user_data = json.loads(urllib.request.urlopen(facebook_api_url).read().decode())
-    # registered_friends = [friend["id"] for friend in user_data["data"]]
+    user = User.query.get(request.json.get("user_id"))
+    facebook_api_url = "https://graph.facebook.com/v2.12/me/friends?access_token="
+    facebook_api_url += user.facebook_token
+    print(facebook_api_url)
+    user_data = json.loads(urllib.request.urlopen(facebook_api_url).read().decode())
+    registered_friends = [friend["id"] for friend in user_data["data"]]
 
     users = []
     for device_id in request.json.get("ids"):
-        user = User.query.filter(User.device_id == device_id).one()
-        facebook_api_url = "https://graph.facebook.com/v2.12/me?fields=id%2Cname%2Cposts%2Cbirthday%2Ceducation%2Cinspirational_people&access_token="
-        facebook_api_url += user.facebook_token
-        user_data = json.loads(urllib.request.urlopen(facebook_api_url).read().decode())
-        if not user_data["id"] in registered_friends:
-            user_data["facebook_id"] = user_data["id"]
-            user_data["id"] = device_id
-            user_data["facebook_url"] = "https://facebook.com/" + user_data["facebook_id"]
-            user_data["image_url"] = "https://graph.facebook.com/" + user_data["facebook_id"] + "/picture?type=large"
-            user_data["user_id"] = user.id
-            user_data["description"] = user.description
-            user_data["occupation"] = user.occupation
-            users.append(user_data)
-
+        user = User.query.filter(User.device_id == device_id).one_or_none()
+        if user is not None:
+            facebook_api_url = "https://graph.facebook.com/v2.12/me?fields=id%2Cname%2Cposts%2Cbirthday%2Ceducation%2Cinspirational_people&access_token="
+            facebook_api_url += user.facebook_token
+            user_data = json.loads(urllib.request.urlopen(facebook_api_url).read().decode())
+            if user_data["id"] in registered_friends:
+                user_data["facebook_id"] = user_data["id"]
+                user_data["id"] = device_id
+                user_data["facebook_url"] = "https://facebook.com/" + user_data["facebook_id"]
+                user_data["image_url"] = "https://graph.facebook.com/" + user_data["facebook_id"] + "/picture?type=large"
+                user_data["user_id"] = user.id
+                user_data["description"] = user.description
+                user_data["occupation"] = user.occupation
+                users.append(user_data)
     return jsonify({"profiles": users})
 
 
@@ -129,3 +129,29 @@ def add_occupation_for_user():
     db.session.commit()
 
     return jsonify({"message": "Occupation updated successfully"})
+
+
+@app.route(API_PREFIX + "addInteractions", methods=["POST"])
+def add_interactions():
+    if request.json.get("interactions") is None:
+        return return_error(400, "No interactions present")
+
+    if request.json.get("user_id") is None:
+        return return_error(400, "No user_id present")
+
+    for interaction in request.json.get("interactions"):
+        peer = User.query.filter(User.device_id == interaction["device_id"]).one()
+        user = User.query.get(request.json.get("user_id"))
+
+        inter = Interaction(
+            coordinates=interaction["coordinates"],
+            timestamp=interaction["timestamp"],
+            user_id=user.id,
+            peer_id=peer.id
+        )
+
+        db.session.add(inter)
+        db.session.commit()
+
+    return jsonify({"message": "Added interactions successfully"})
+
