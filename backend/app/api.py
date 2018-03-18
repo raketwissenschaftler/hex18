@@ -90,6 +90,8 @@ def get_profile_info():
                 user_data["description"] = user.description
                 user_data["occupation"] = user.occupation
                 users.append(user_data)
+        else:
+            print(device_id)
     return jsonify({"profiles": users})
 
 
